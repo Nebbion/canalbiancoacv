@@ -1,0 +1,10 @@
+{
+  "name": "ASD Canalbianco ACV",
+  "short_name": "Canalbianco ACV",
+  "description": "Sito ufficiale ASD Canalbianco ACV — 22° Torneo Trevisan Denis live",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a2452",
+  "theme_color": "#1a2452",
+  "icons": []
+}
