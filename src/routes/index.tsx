@@ -1,6 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Calendar, MapPin, Trophy, Users, Newspaper, Camera } from "lucide-react";
-import hero from "@/assets/hero-stadium.jpg";
+import {
+  ArrowRight,
+  Calendar,
+  MapPin,
+  Trophy,
+  Users,
+  Newspaper,
+  Camera,
+  Mail,
+  Navigation,
+} from "lucide-react";import hero from "@/assets/hero-stadium.jpg";
 import logo from "@/assets/logo-canalbianco.png";
 
 const categorie = [
@@ -183,27 +192,96 @@ function Index() {
         </div>
       </section>
 
-      {/* CONTATTI / MAPPA */}
+      {/* CONTATTI / CAMPO */}
       <section className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 grid gap-8 md:grid-cols-2 items-center">
-          <div>
-            <span className="text-primary text-sm font-bold uppercase tracking-widest">Dove giochiamo</span>
-            <h2 className="font-display text-4xl md:text-5xl tracking-wide mt-2">Campo Sportivo di Villamarzana</h2>
-            <p className="mt-4 text-muted-foreground text-lg">Vieni a tifare la squadra: ingresso libero, atmosfera di paese, calcio vero.</p>
-            <div className="mt-6 space-y-3 text-sm">
-              <div className="flex items-center gap-2"><MapPin className="text-primary" size={18} /> Villamarzana (RO) — Polesine</div>
-              <Link to="/contatti" className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-glow hover:brightness-110">
-                Contattaci <ArrowRight size={16} />
-              </Link>
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
+          <div className="rounded-3xl overflow-hidden border border-border bg-secondary text-white shadow-stadium relative">
+            
+            <div className="absolute inset-0 bg-stadium-grid opacity-20" />
+            <div className="absolute top-0 right-0 h-72 w-72 bg-primary/20 blur-3xl rounded-full" />
+
+            <div className="relative grid gap-10 md:grid-cols-[1.2fr_auto] items-center p-8 md:p-14">
+              
+              {/* TESTI */}
+              <div>
+                <span className="text-primary text-sm font-bold uppercase tracking-widest">
+                  Dove giochiamo
+                </span>
+
+                <h2 className="font-display text-4xl md:text-6xl tracking-wide mt-3 leading-tight">
+                  Campo Sportivo
+                  <br />
+                  di Villamarzana
+                </h2>
+
+                <p className="mt-5 text-white/75 text-lg max-w-2xl leading-relaxed">
+                  Vieni a tifare il Canalbianco ACV nel cuore del Polesine.
+                  Atmosfera autentica, calcio giovanile e passione biancoblu.
+                </p>
+
+                <div className="mt-8 flex items-center gap-3 text-white/80">
+                  <MapPin className="text-primary shrink-0" size={20} />
+                  <span className="text-base">
+                    Via Piave 8, Villamarzana (RO)
+                  </span>
+                </div>
+
+                {/* BOTTONI */}
+                <div className="mt-10 flex flex-wrap gap-4">
+                  
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=Via+Piave+8+Villamarzana+RO"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-glow hover:brightness-110 hover:scale-[1.02] transition-all duration-300"
+                  >
+                    <Navigation size={18} />
+                    Indicazioni stradali
+                  </a>
+
+                  <a
+                    href="mailto:info@canalbiancoacv.it"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 backdrop-blur px-6 py-3 text-sm font-bold uppercase tracking-wider text-white hover:bg-white/10 transition-all duration-300"
+                  >
+                    <Mail size={18} />
+                    Contattaci
+                  </a>
+                </div>
+              </div>
+
+              {/* CARD DESTRA */}
+              <div className="hidden md:block">
+                <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 min-w-[320px]">
+                  
+                  <div className="text-center">
+                    <div className="font-display text-3xl tracking-wide">
+                      ASD Canalbianco ACV
+                    </div>
+
+                    <div className="mt-2 text-white/60 uppercase tracking-[0.25em] text-xs">
+                      Dal 2013
+                    </div>
+
+                    <div className="mt-8 space-y-4 text-sm text-white/80">
+                      <div>⚽ Settore Giovanile</div>
+                      <div>🏟️ Campo Sportivo Villamarzana</div>
+                      <div>🔥 Torneo Trevisan Denis 2026</div>
+                      <div>📍 Polesine • Rovigo</div>
+                    </div>
+
+                    <Link
+                      to="/torneo"
+                      className="mt-8 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-glow hover:brightness-110 transition"
+                    >
+                      Live torneo
+                      <ArrowRight size={16} />
+                    </Link>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
-          </div>
-          <div className="aspect-video rounded-2xl overflow-hidden shadow-stadium border border-border">
-            <iframe
-              title="Mappa Villamarzana"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=11.74%2C44.99%2C11.79%2C45.03&amp;layer=mapnik&amp;marker=45.0115%2C11.7625"
-              className="w-full h-full"
-              loading="lazy"
-            />
           </div>
         </div>
       </section>
