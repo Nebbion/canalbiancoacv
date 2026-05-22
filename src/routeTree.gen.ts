@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TorneoRouteImport } from './routes/torneo'
 import { Route as SquadreRouteImport } from './routes/squadre'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContattiRouteImport } from './routes/contatti'
@@ -29,11 +28,6 @@ const TorneoRoute = TorneoRouteImport.update({
 const SquadreRoute = SquadreRouteImport.update({
   id: '/squadre',
   path: '/squadre',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -82,7 +76,6 @@ export interface FileRoutesByFullPath {
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/squadre': typeof SquadreRoute
   '/torneo': typeof TorneoRouteWithChildren
   '/torneo/calendario': typeof TorneoCalendarioRoute
@@ -95,7 +88,6 @@ export interface FileRoutesByTo {
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/squadre': typeof SquadreRoute
   '/torneo/calendario': typeof TorneoCalendarioRoute
   '/torneo/classifiche': typeof TorneoClassificheRoute
@@ -108,7 +100,6 @@ export interface FileRoutesById {
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/squadre': typeof SquadreRoute
   '/torneo': typeof TorneoRouteWithChildren
   '/torneo/calendario': typeof TorneoCalendarioRoute
@@ -123,7 +114,6 @@ export interface FileRouteTypes {
     | '/contatti'
     | '/gallery'
     | '/news'
-    | '/sitemap.xml'
     | '/squadre'
     | '/torneo'
     | '/torneo/calendario'
@@ -136,7 +126,6 @@ export interface FileRouteTypes {
     | '/contatti'
     | '/gallery'
     | '/news'
-    | '/sitemap.xml'
     | '/squadre'
     | '/torneo/calendario'
     | '/torneo/classifiche'
@@ -148,7 +137,6 @@ export interface FileRouteTypes {
     | '/contatti'
     | '/gallery'
     | '/news'
-    | '/sitemap.xml'
     | '/squadre'
     | '/torneo'
     | '/torneo/calendario'
@@ -162,7 +150,6 @@ export interface RootRouteChildren {
   ContattiRoute: typeof ContattiRoute
   GalleryRoute: typeof GalleryRoute
   NewsRoute: typeof NewsRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SquadreRoute: typeof SquadreRoute
   TorneoRoute: typeof TorneoRouteWithChildren
 }
@@ -181,13 +168,6 @@ declare module '@tanstack/react-router' {
       path: '/squadre'
       fullPath: '/squadre'
       preLoaderRoute: typeof SquadreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -271,7 +251,6 @@ const rootRouteChildren: RootRouteChildren = {
   ContattiRoute: ContattiRoute,
   GalleryRoute: GalleryRoute,
   NewsRoute: NewsRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SquadreRoute: SquadreRoute,
   TorneoRoute: TorneoRouteWithChildren,
 }

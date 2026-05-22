@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { getTorneoData, type TorneoData } from "@/lib/torneo.functions";
 
 export function useTorneoData() {
-  const fetcher = useServerFn(getTorneoData);
   return useQuery<TorneoData>({
     queryKey: ["torneo"],
-    queryFn: () => fetcher(),
+    queryFn: () => getTorneoData(),
     refetchInterval: 30_000,
     refetchOnWindowFocus: true,
     staleTime: 15_000,
@@ -14,7 +12,7 @@ export function useTorneoData() {
 }
 
 export function parseItalianDate(d: string): number {
-  // "DD/MM/YYYY" -> ms
+  // "DD/MM/YYYY" → timestamp UTC
   const m = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
   if (!m) return 0;
   const yyyy = m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3]);
