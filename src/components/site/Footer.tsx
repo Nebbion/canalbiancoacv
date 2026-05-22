@@ -39,8 +39,8 @@ export function Footer() {
         <div>
           <h4 className="font-display text-lg tracking-wider mb-4 text-primary">Seguici</h4>
           <div className="flex gap-3">
-            <a aria-label="Facebook" href="#" className="h-10 w-10 grid place-items-center rounded-full bg-white/10 hover:bg-primary transition"><Facebook size={18} /></a>
-            <a aria-label="Instagram" href="#" className="h-10 w-10 grid place-items-center rounded-full bg-white/10 hover:bg-primary transition"><Instagram size={18} /></a>
+            <a aria-label="Facebook" href="https://www.facebook.com/canalbiancoacv" className="h-10 w-10 grid place-items-center rounded-full bg-white/10 hover:bg-primary transition"><Facebook size={18} /></a>
+            <a aria-label="Instagram" href="https://www.instagram.com/canalbiancoacv" className="h-10 w-10 grid place-items-center rounded-full bg-white/10 hover:bg-primary transition"><Instagram size={18} /></a>
           </div>
         </div>
       </div>
