@@ -18,7 +18,9 @@ function Classifiche() {
         </div>
       )}
       <div className="grid gap-8 lg:grid-cols-2">
-        {entries.map(([key, rows]) => {
+        {entries
+          .filter(([key]) => !["Semifinale", "Finale"].includes(key.split("|")[1]))
+          .map(([key, rows]) => {
           const [categoria, girone] = key.split("|");
           return (
             <section key={key} className="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
