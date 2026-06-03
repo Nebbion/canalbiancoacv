@@ -148,6 +148,7 @@ function normalizeStato(raw: string | null | undefined): MatchStatus {
 function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
   const buckets: Record<string, Map<string, StandingsRow>> = {};
   for (const m of matches) {
+    if (["Semifinale", "Finale"].includes(m.girone)) continue;
     if (m.stato !== "Terminata" || m.golCasa === null || m.golOspite === null || !m.girone) continue;
     const key = `${m.categoria}|${m.girone}`;
     if (!buckets[key]) buckets[key] = new Map();
