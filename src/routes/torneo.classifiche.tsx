@@ -25,7 +25,7 @@ function Classifiche() {
               <header className="bg-secondary border-b border-white/10 px-5 py-3 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] uppercase tracking-widest text-white/60">Classifica</div>
-                  <div className="font-display text-xl tracking-wide">{categoria} <span className="text-primary">· Girone {girone}</span></div>
+                  <div className="font-display text-xl tracking-wide">{categoria} <span className="text-primary">· {["Semifinale", "Finale"].includes(girone) ? girone : `Girone ${girone}`}</span></div>
                 </div>
               </header>
               <div className="overflow-x-auto">
