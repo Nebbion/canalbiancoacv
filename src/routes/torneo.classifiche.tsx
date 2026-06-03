@@ -6,8 +6,24 @@ export const Route = createFileRoute("/torneo/classifiche")({
   component: Classifiche,
 });
 
-// ─── Mappatura loghi squadre ─────────────────────────────────────────────────
-// Metti i PNG in /public/loghi/ e aggiungi qui nome squadra → file
+
+// Girone speciali (esclusi da classifica, mostrati diversamente)
+const GIRONI_SPECIALI = ["semifinale", "finale"];
+
+function isSpeciale(girone: string) {
+  return GIRONI_SPECIALI.includes(girone.toLowerCase());
+}
+
+// Iniziali per fallback avatar
+function iniziali(nome: string) {
+  return nome
+    .split(/[\s.]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
 function TeamLogo({ nome, size = "sm" }: { nome: string; size?: "sm" | "md" }) {
   const dim = size === "sm" ? "w-6 h-6 text-[9px]" : "w-8 h-8 text-[10px]";
   const exts = ["png", "jpg", "jpeg"];
@@ -32,48 +48,6 @@ function TeamLogo({ nome, size = "sm" }: { nome: string; size?: "sm" | "md" }) {
         else setFailed(true);
       }}
     />
-  );
-}
-
-// Girone speciali (esclusi da classifica, mostrati diversamente)
-const GIRONI_SPECIALI = ["semifinale", "finale"];
-
-function isSpeciale(girone: string) {
-  return GIRONI_SPECIALI.includes(girone.toLowerCase());
-}
-
-// Iniziali per fallback avatar
-function iniziali(nome: string) {
-  return nome
-    .split(/[\s.]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join("");
-}
-
-function TeamLogo({ nome, size = "sm" }: { nome: string; size?: "sm" | "md" }) {
-  const src = LOGHI[nome];
-  const dim = size === "sm" ? "w-6 h-6 text-[9px]" : "w-8 h-8 text-[10px]";
-
-  if (src) {
-    return (
-      <img
-        src={src}
-        alt={nome}
-        className={`${dim} rounded-full object-contain bg-white/10 flex-shrink-0`}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = "none";
-        }}
-      />
-    );
-  }
-  return (
-    <div
-      className={`${dim} rounded-full bg-white/10 flex items-center justify-center font-bold text-white/60 flex-shrink-0`}
-    >
-      {iniziali(nome)}
-    </div>
   );
 }
 
