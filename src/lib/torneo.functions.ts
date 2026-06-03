@@ -147,12 +147,15 @@ function normalizeStato(raw: string | null | undefined): MatchStatus {
 // ─── Classifiche ───────────────────────────────────────────────────────────
 function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
   const buckets: Record<string, Map<string, StandingsRow>> = {};
+
   for (const m of matches) {
-    if (["Semifinale", "Finale"].includes(m.girone)) continue;
-    if (m.stato !== "Terminata" || m.golCasa === null || m.golOspite === null || !m.girone) continue;
+    if (!m.girone || !m.categoria) continue;
+    const speciale = ["semifinale", "finale"].includes(m.girone.toLowerCase());
     const key = `${m.categoria}|${m.girone}`;
+
     if (!buckets[key]) buckets[key] = new Map();
     const map = buckets[key];
+
     const ensure = (name: string): StandingsRow => {
       let row = map.get(name);
       if (!row) {
@@ -161,17 +164,29 @@ function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
       }
       return row;
     };
+
+    // Per gironi speciali registra solo le squadre (senza calcolare punti)
+    if (speciale) {
+      if (!m.casa.includes("°")) ensure(m.casa);
+      if (!m.ospite.includes("°")) ensure(m.ospite);
+      continue;
+    }
+
+    // Gironi normali — solo partite terminate
+    if (m.stato !== "Terminata" || m.golCasa === null || m.golOspite === null) continue;
+
     const home = ensure(m.casa);
     const away = ensure(m.ospite);
     home.pg++; away.pg++;
     home.gf += m.golCasa; home.gs += m.golOspite;
     away.gf += m.golOspite; away.gs += m.golCasa;
-    if (m.golCasa > m.golOspite)       { home.v++; home.pti += 3; away.p++; }
-    else if (m.golCasa < m.golOspite)  { away.v++; away.pti += 3; home.p++; }
-    else                               { home.n++; away.n++; home.pti++; away.pti++; }
+    if (m.golCasa > m.golOspite)      { home.v++; home.pti += 3; away.p++; }
+    else if (m.golCasa < m.golOspite) { away.v++; away.pti += 3; home.p++; }
+    else                              { home.n++; away.n++; home.pti++; away.pti++; }
     home.dr = home.gf - home.gs;
     away.dr = away.gf - away.gs;
   }
+
   const out: Record<string, StandingsRow[]> = {};
   for (const [key, map] of Object.entries(buckets)) {
     out[key] = [...map.values()].sort(
