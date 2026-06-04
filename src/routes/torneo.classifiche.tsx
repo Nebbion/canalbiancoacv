@@ -109,23 +109,24 @@ function TabelloneMatch({ m }: { m: Match }) {
 
   return (
     <div className={`rounded-xl border overflow-hidden ${isFinale ? "border-amber-400/40" : "border-white/10"} bg-white/5`}>
-      {/* Squadra casa */}
       <div className={`flex items-center gap-3 px-4 py-3 border-b border-white/8 ${winHome ? "bg-white/8" : ""}`}>
         <TeamLogo nome={m.casa} size="md" />
-        <span className={`flex-1 font-semibold text-sm ${winHome ? "text-white" : "text-white/70"}`}>{m.casa}</span>
-        <span className={`font-display text-2xl w-8 text-center ${winHome ? "text-white" : "text-white/50"}`}>
+        <span className={`flex-1 min-w-0 font-semibold text-sm leading-tight ${winHome ? "text-white" : "text-white/70"}`}>
+          {m.casa}
+        </span>
+        <span className={`font-display text-2xl w-8 text-center flex-shrink-0 ${winHome ? "text-white" : "text-white/50"}`}>
           {hasScore ? m.golCasa : "–"}
         </span>
       </div>
-      {/* Squadra ospite */}
       <div className={`flex items-center gap-3 px-4 py-3 ${winAway ? "bg-white/8" : ""}`}>
         <TeamLogo nome={m.ospite} size="md" />
-        <span className={`flex-1 font-semibold text-sm ${winAway ? "text-white" : "text-white/70"}`}>{m.ospite}</span>
-        <span className={`font-display text-2xl w-8 text-center ${winAway ? "text-white" : "text-white/50"}`}>
+        <span className={`flex-1 min-w-0 font-semibold text-sm leading-tight ${winAway ? "text-white" : "text-white/70"}`}>
+          {m.ospite}
+        </span>
+        <span className={`font-display text-2xl w-8 text-center flex-shrink-0 ${winAway ? "text-white" : "text-white/50"}`}>
           {hasScore ? m.golOspite : "–"}
         </span>
       </div>
-      {/* Data e stato */}
       <div className="flex items-center justify-between px-4 py-2 border-t border-white/8 text-[11px] text-white/40">
         <span>{m.data} · {m.ora}</span>
         <span className={`uppercase tracking-widest font-bold ${
@@ -166,7 +167,7 @@ function TabelloneCategoria({ categoria, matches }: { categoria: string; matches
             {finali.length > 0 && (
               <div className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Semifinali</div>
             )}
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="flex flex-col gap-3">
               {semifinali.map((m) => <TabelloneMatch key={m.id} m={m} />)}
             </div>
           </div>
@@ -235,7 +236,7 @@ function Classifiche() {
             <span className="text-[11px] uppercase tracking-[3px] text-white/40">Fase finale</span>
             <div className="h-px flex-1 bg-white/10" />
           </div>
-          <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {categorieFinale.map((cat) => (
               <TabelloneCategoria
                 key={cat}
