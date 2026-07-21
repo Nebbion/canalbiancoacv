@@ -1,4 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useLocation,
+} from "@tanstack/react-router";
 import { ArrowRight, Trophy } from "lucide-react";
 
 export const Route = createFileRoute("/archivio/tornei")({
@@ -15,6 +20,12 @@ export const Route = createFileRoute("/archivio/tornei")({
 });
 
 function ArchivioTornei() {
+  const location = useLocation();
+
+  if (location.pathname !== "/archivio/tornei") {
+    return <Outlet />;
+  }
+
   return (
     <div className="bg-secondary text-white min-h-[70vh]">
       <section className="relative overflow-hidden border-b border-white/10">
