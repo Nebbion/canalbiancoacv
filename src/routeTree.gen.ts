@@ -14,11 +14,14 @@ import { Route as SquadreRouteImport } from './routes/squadre'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContattiRouteImport } from './routes/contatti'
+import { Route as ArchivioRouteImport } from './routes/archivio'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TorneoIndexRouteImport } from './routes/torneo.index'
 import { Route as TorneoMarcatoriRouteImport } from './routes/torneo.marcatori'
 import { Route as TorneoClassificheRouteImport } from './routes/torneo.classifiche'
 import { Route as TorneoCalendarioRouteImport } from './routes/torneo.calendario'
+import { Route as ArchivioTorneiRouteImport } from './routes/archivio.tornei'
+import { Route as ArchivioTorneiTrevisan26RouteImport } from './routes/archivio.tornei.trevisan-26'
 
 const TorneoRoute = TorneoRouteImport.update({
   id: '/torneo',
@@ -43,6 +46,11 @@ const GalleryRoute = GalleryRouteImport.update({
 const ContattiRoute = ContattiRouteImport.update({
   id: '/contatti',
   path: '/contatti',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchivioRoute = ArchivioRouteImport.update({
+  id: '/archivio',
+  path: '/archivio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -70,83 +78,113 @@ const TorneoCalendarioRoute = TorneoCalendarioRouteImport.update({
   path: '/calendario',
   getParentRoute: () => TorneoRoute,
 } as any)
+const ArchivioTorneiRoute = ArchivioTorneiRouteImport.update({
+  id: '/tornei',
+  path: '/tornei',
+  getParentRoute: () => ArchivioRoute,
+} as any)
+const ArchivioTorneiTrevisan26Route =
+  ArchivioTorneiTrevisan26RouteImport.update({
+    id: '/trevisan-26',
+    path: '/trevisan-26',
+    getParentRoute: () => ArchivioTorneiRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/archivio': typeof ArchivioRouteWithChildren
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
   '/squadre': typeof SquadreRoute
   '/torneo': typeof TorneoRouteWithChildren
+  '/archivio/tornei': typeof ArchivioTorneiRouteWithChildren
   '/torneo/calendario': typeof TorneoCalendarioRoute
   '/torneo/classifiche': typeof TorneoClassificheRoute
   '/torneo/marcatori': typeof TorneoMarcatoriRoute
   '/torneo/': typeof TorneoIndexRoute
+  '/archivio/tornei/trevisan-26': typeof ArchivioTorneiTrevisan26Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/archivio': typeof ArchivioRouteWithChildren
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
   '/squadre': typeof SquadreRoute
+  '/archivio/tornei': typeof ArchivioTorneiRouteWithChildren
   '/torneo/calendario': typeof TorneoCalendarioRoute
   '/torneo/classifiche': typeof TorneoClassificheRoute
   '/torneo/marcatori': typeof TorneoMarcatoriRoute
   '/torneo': typeof TorneoIndexRoute
+  '/archivio/tornei/trevisan-26': typeof ArchivioTorneiTrevisan26Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/archivio': typeof ArchivioRouteWithChildren
   '/contatti': typeof ContattiRoute
   '/gallery': typeof GalleryRoute
   '/news': typeof NewsRoute
   '/squadre': typeof SquadreRoute
   '/torneo': typeof TorneoRouteWithChildren
+  '/archivio/tornei': typeof ArchivioTorneiRouteWithChildren
   '/torneo/calendario': typeof TorneoCalendarioRoute
   '/torneo/classifiche': typeof TorneoClassificheRoute
   '/torneo/marcatori': typeof TorneoMarcatoriRoute
   '/torneo/': typeof TorneoIndexRoute
+  '/archivio/tornei/trevisan-26': typeof ArchivioTorneiTrevisan26Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/archivio'
     | '/contatti'
     | '/gallery'
     | '/news'
     | '/squadre'
     | '/torneo'
+    | '/archivio/tornei'
     | '/torneo/calendario'
     | '/torneo/classifiche'
     | '/torneo/marcatori'
     | '/torneo/'
+    | '/archivio/tornei/trevisan-26'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/archivio'
     | '/contatti'
     | '/gallery'
     | '/news'
     | '/squadre'
+    | '/archivio/tornei'
     | '/torneo/calendario'
     | '/torneo/classifiche'
     | '/torneo/marcatori'
     | '/torneo'
+    | '/archivio/tornei/trevisan-26'
   id:
     | '__root__'
     | '/'
+    | '/archivio'
     | '/contatti'
     | '/gallery'
     | '/news'
     | '/squadre'
     | '/torneo'
+    | '/archivio/tornei'
     | '/torneo/calendario'
     | '/torneo/classifiche'
     | '/torneo/marcatori'
     | '/torneo/'
+    | '/archivio/tornei/trevisan-26'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArchivioRoute: typeof ArchivioRouteWithChildren
   ContattiRoute: typeof ContattiRoute
   GalleryRoute: typeof GalleryRoute
   NewsRoute: typeof NewsRoute
@@ -191,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContattiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/archivio': {
+      id: '/archivio'
+      path: '/archivio'
+      fullPath: '/archivio'
+      preLoaderRoute: typeof ArchivioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -226,8 +271,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TorneoCalendarioRouteImport
       parentRoute: typeof TorneoRoute
     }
+    '/archivio/tornei': {
+      id: '/archivio/tornei'
+      path: '/tornei'
+      fullPath: '/archivio/tornei'
+      preLoaderRoute: typeof ArchivioTorneiRouteImport
+      parentRoute: typeof ArchivioRoute
+    }
+    '/archivio/tornei/trevisan-26': {
+      id: '/archivio/tornei/trevisan-26'
+      path: '/trevisan-26'
+      fullPath: '/archivio/tornei/trevisan-26'
+      preLoaderRoute: typeof ArchivioTorneiTrevisan26RouteImport
+      parentRoute: typeof ArchivioTorneiRoute
+    }
   }
 }
+
+interface ArchivioTorneiRouteChildren {
+  ArchivioTorneiTrevisan26Route: typeof ArchivioTorneiTrevisan26Route
+}
+
+const ArchivioTorneiRouteChildren: ArchivioTorneiRouteChildren = {
+  ArchivioTorneiTrevisan26Route: ArchivioTorneiTrevisan26Route,
+}
+
+const ArchivioTorneiRouteWithChildren = ArchivioTorneiRoute._addFileChildren(
+  ArchivioTorneiRouteChildren,
+)
+
+interface ArchivioRouteChildren {
+  ArchivioTorneiRoute: typeof ArchivioTorneiRouteWithChildren
+}
+
+const ArchivioRouteChildren: ArchivioRouteChildren = {
+  ArchivioTorneiRoute: ArchivioTorneiRouteWithChildren,
+}
+
+const ArchivioRouteWithChildren = ArchivioRoute._addFileChildren(
+  ArchivioRouteChildren,
+)
 
 interface TorneoRouteChildren {
   TorneoCalendarioRoute: typeof TorneoCalendarioRoute
@@ -248,6 +331,7 @@ const TorneoRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArchivioRoute: ArchivioRouteWithChildren,
   ContattiRoute: ContattiRoute,
   GalleryRoute: GalleryRoute,
   NewsRoute: NewsRoute,

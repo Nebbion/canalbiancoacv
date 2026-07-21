@@ -12,8 +12,8 @@
  *   "CASA: Rossi 2; OSPITE: Bianchi 1"
  *   "Rossi(2)|casa, Bianchi(1)|ospite"
  *
- * Per attivare: imposta VITE_SHEET_ID nel file .env
- *   VITE_SHEET_ID=1AbCdEfGhIjKlMnOpQrStu...
+ * Per attivare: imposta VITE_TORNEO_SHEET_ID nel file .env
+ *   VITE_TORNEO_SHEET_ID=1AbCdEfGhIjKlMnOpQrStu...
  * Il foglio deve essere condiviso pubblicamente (Chiunque con link → Visualizzatore)
  * e pubblicato sul web (File → Condividi → Pubblica sul web → CSV).
  */
@@ -62,56 +62,38 @@ export interface TorneoData {
   matches: Match[];
   categorie: string[];
   standings: Record<string, StandingsRow[]>; // chiave: `${categoria}|${girone}`
-  scorers: Record<string, Scorer[]>;          // chiave: categoria
+  scorers: Record<string, Scorer[]>; // chiave: categoria
 }
 
-// ─── Dati statici di fallback (calendario dalla locandina) ─────────────────
-const FALLBACK_DATA: TorneoData = {
-  fetchedAt: new Date().toISOString(),
-  matches: [
-    // PULCINI — Girone A
-    { id:"P-A1", categoria:"Pulcini", girone:"A", data:"18/05/2026", ora:"19:00", casa:"Virtus Academy A", ospite:"Union Vis",     golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"P-A2", categoria:"Pulcini", girone:"A", data:"22/05/2026", ora:"19:00", casa:"Canalbianco A",   ospite:"Union Vis",     golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"P-A3", categoria:"Pulcini", girone:"A", data:"29/05/2026", ora:"19:00", casa:"Virtus Academy A", ospite:"Canalbianco A", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // PULCINI — Girone B
-    { id:"P-B1", categoria:"Pulcini", girone:"B", data:"20/05/2026", ora:"19:00", casa:"Virtus Academy B", ospite:"Canalbianco B",  golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"P-B2", categoria:"Pulcini", girone:"B", data:"25/05/2026", ora:"19:00", casa:"G.P. Cavazzana",   ospite:"Canalbianco B",  golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"P-B3", categoria:"Pulcini", girone:"B", data:"27/05/2026", ora:"19:00", casa:"Virtus Academy B", ospite:"G.P. Cavazzana", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // PULCINI — Semifinali
-    { id:"P-SF1", categoria:"Pulcini", girone:"Semifinale", data:"01/06/2026", ora:"19:00", casa:"1° Girone A", ospite:"2° Girone B", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"P-SF2", categoria:"Pulcini", girone:"Semifinale", data:"03/06/2026", ora:"19:00", casa:"1° Girone B", ospite:"2° Girone A", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // ESORDIENTI — Girone A
-    { id:"E-A1", categoria:"Esordienti", girone:"A", data:"18/05/2026", ora:"20:00", casa:"A.P. Grignano",   ospite:"U.S. Adriese",   golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"E-A2", categoria:"Esordienti", girone:"A", data:"25/05/2026", ora:"20:00", casa:"U.S. Adriese",    ospite:"G.P. Cavazzana", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"E-A3", categoria:"Esordienti", girone:"A", data:"29/05/2026", ora:"20:00", casa:"Canalbianco ACV", ospite:"U.S. Adriese",   golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // ESORDIENTI — Girone B
-    { id:"E-B1", categoria:"Esordienti", girone:"B", data:"20/05/2026", ora:"20:00", casa:"G.P. Cavazzana",  ospite:"Canalbianco ACV", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"E-B2", categoria:"Esordienti", girone:"B", data:"27/05/2026", ora:"20:00", casa:"G.P. Cavazzana",  ospite:"A.P. Grignano",   golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // ESORDIENTI — Semifinali
-    { id:"E-SF1", categoria:"Esordienti", girone:"Semifinale", data:"01/06/2026", ora:"20:00", casa:"1° Girone A", ospite:"2° Girone B", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"E-SF2", categoria:"Esordienti", girone:"Semifinale", data:"03/06/2026", ora:"20:00", casa:"1° Girone B", ospite:"2° Girone A", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // GIOVANISSIMI — Girone A
-    { id:"G-A1", categoria:"Giovanissimi", girone:"A", data:"18/05/2026", ora:"21:00", casa:"ASD Canalbianco",     ospite:"S.C. Altopolesine", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"G-A2", categoria:"Giovanissimi", girone:"A", data:"22/05/2026", ora:"21:00", casa:"S.C. Altopolesine",   ospite:"G.P. Cavazzana",    golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"G-A3", categoria:"Giovanissimi", girone:"A", data:"27/05/2026", ora:"21:00", casa:"ASD Canalbianco",     ospite:"G.P. Cavazzana",    golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // GIOVANISSIMI — Girone B
-    { id:"G-B1", categoria:"Giovanissimi", girone:"B", data:"20/05/2026", ora:"21:00", casa:"S. Caterina Stanghella", ospite:"ASD Copparo",   golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"G-B2", categoria:"Giovanissimi", girone:"B", data:"25/05/2026", ora:"21:00", casa:"ASD Copparo",            ospite:"ASD Baricetta", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"G-B3", categoria:"Giovanissimi", girone:"B", data:"29/05/2026", ora:"21:00", casa:"S. Caterina Stanghella", ospite:"ASD Baricetta", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    // GIOVANISSIMI — Semifinali
-    { id:"G-SF1", categoria:"Giovanissimi", girone:"Semifinale", data:"01/06/2026", ora:"21:00", casa:"1° Girone A", ospite:"2° Girone B", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-    { id:"G-SF2", categoria:"Giovanissimi", girone:"Semifinale", data:"03/06/2026", ora:"21:00", casa:"1° Girone B", ospite:"2° Girone A", golCasa:null, golOspite:null, stato:"Da giocare", campo:"Villamarzana", marcatori:[], mvp:null, note:null },
-  ],
-  categorie: ["Pulcini", "Esordienti", "Giovanissimi"],
+export const EMPTY_TORNEO_DATA: TorneoData = {
+  fetchedAt: "",
+  matches: [],
+  categorie: [],
   standings: {},
   scorers: {},
 };
 
+export function isFinalPhase(girone: string) {
+  const value = girone.toLowerCase().trim();
+  return value.includes("semifinale") || value.startsWith("finale");
+}
+
+function isByeTeam(nome: string) {
+  return nome.trim().toLowerCase() === "riposa";
+}
+
 // ─── Parser marcatori ───────────────────────────────────────────────────────
-function parseMarcatori(raw: string | null, casa: string, ospite: string): Match["marcatori"] {
+function parseMarcatori(
+  raw: string | null,
+  casa: string,
+  ospite: string,
+): Match["marcatori"] {
   if (!raw) return [];
   const out: Match["marcatori"] = [];
-  const segments = raw.split(/;|\n/).map((s) => s.trim()).filter(Boolean);
+  const segments = raw
+    .split(/;|\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
   for (const segment of segments) {
     let squadra = casa;
     let body = segment;
@@ -120,7 +102,10 @@ function parseMarcatori(raw: string | null, casa: string, ospite: string): Match
       squadra = teamMatch[1].toUpperCase() === "CASA" ? casa : ospite;
       body = teamMatch[2];
     }
-    for (const piece of body.split(",").map((p) => p.trim()).filter(Boolean)) {
+    for (const piece of body
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean)) {
       const tagged = piece.match(/^(.+?)\|(casa|ospite)$/i);
       let target = squadra;
       let testo = piece;
@@ -140,7 +125,8 @@ function parseMarcatori(raw: string | null, casa: string, ospite: string): Match
 function normalizeStato(raw: string | null | undefined): MatchStatus {
   const v = (raw ?? "").toLowerCase();
   if (v.includes("corso") || v.includes("live")) return "In corso";
-  if (v.includes("term") || v.includes("final") || v === "ft") return "Terminata";
+  if (v.includes("term") || v.includes("final") || v === "ft")
+    return "Terminata";
   return "Da giocare";
 }
 
@@ -150,7 +136,7 @@ function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
 
   for (const m of matches) {
     if (!m.girone || !m.categoria) continue;
-    const speciale = ["semifinale", "finale"].includes(m.girone.toLowerCase());
+    const speciale = isFinalPhase(m.girone);
     const key = `${m.categoria}|${m.girone}`;
 
     if (!buckets[key]) buckets[key] = new Map();
@@ -159,7 +145,18 @@ function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
     const ensure = (name: string): StandingsRow => {
       let row = map.get(name);
       if (!row) {
-        row = { squadra: name, girone: m.girone, pg: 0, v: 0, n: 0, p: 0, gf: 0, gs: 0, dr: 0, pti: 0 };
+        row = {
+          squadra: name,
+          girone: m.girone,
+          pg: 0,
+          v: 0,
+          n: 0,
+          p: 0,
+          gf: 0,
+          gs: 0,
+          dr: 0,
+          pti: 0,
+        };
         map.set(name, row);
       }
       return row;
@@ -173,16 +170,31 @@ function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
     }
 
     // Gironi normali — solo partite terminate
-    if (m.stato !== "Terminata" || m.golCasa === null || m.golOspite === null) continue;
+    if (m.stato !== "Terminata" || m.golCasa === null || m.golOspite === null)
+      continue;
 
     const home = ensure(m.casa);
     const away = ensure(m.ospite);
-    home.pg++; away.pg++;
-    home.gf += m.golCasa; home.gs += m.golOspite;
-    away.gf += m.golOspite; away.gs += m.golCasa;
-    if (m.golCasa > m.golOspite)      { home.v++; home.pti += 3; away.p++; }
-    else if (m.golCasa < m.golOspite) { away.v++; away.pti += 3; home.p++; }
-    else                              { home.n++; away.n++; home.pti++; away.pti++; }
+    home.pg++;
+    away.pg++;
+    home.gf += m.golCasa;
+    home.gs += m.golOspite;
+    away.gf += m.golOspite;
+    away.gs += m.golCasa;
+    if (m.golCasa > m.golOspite) {
+      home.v++;
+      home.pti += 3;
+      away.p++;
+    } else if (m.golCasa < m.golOspite) {
+      away.v++;
+      away.pti += 3;
+      home.p++;
+    } else {
+      home.n++;
+      away.n++;
+      home.pti++;
+      away.pti++;
+    }
     home.dr = home.gf - home.gs;
     away.dr = away.gf - away.gs;
   }
@@ -190,7 +202,11 @@ function computeStandings(matches: Match[]): Record<string, StandingsRow[]> {
   const out: Record<string, StandingsRow[]> = {};
   for (const [key, map] of Object.entries(buckets)) {
     out[key] = [...map.values()].sort(
-      (a, b) => b.pti - a.pti || b.dr - a.dr || b.gf - a.gf || a.squadra.localeCompare(b.squadra)
+      (a, b) =>
+        b.pti - a.pti ||
+        b.dr - a.dr ||
+        b.gf - a.gf ||
+        a.squadra.localeCompare(b.squadra),
     );
   }
   return out;
@@ -207,23 +223,33 @@ function computeScorers(matches: Match[]): Record<string, Scorer[]> {
       const key = `${g.nome}|${g.squadra}`;
       const cur = map.get(key);
       if (cur) cur.gol += g.gol;
-      else map.set(key, { nome: g.nome, squadra: g.squadra, categoria: m.categoria, gol: g.gol });
+      else
+        map.set(key, {
+          nome: g.nome,
+          squadra: g.squadra,
+          categoria: m.categoria,
+          gol: g.gol,
+        });
     }
   }
   const out: Record<string, Scorer[]> = {};
   for (const [cat, map] of Object.entries(buckets)) {
-    out[cat] = [...map.values()].sort((a, b) => b.gol - a.gol || a.nome.localeCompare(b.nome));
+    out[cat] = [...map.values()].sort(
+      (a, b) => b.gol - a.gol || a.nome.localeCompare(b.nome),
+    );
   }
   return out;
 }
 
 // ─── Fetch principale (browser) ────────────────────────────────────────────
 export async function getTorneoData(): Promise<TorneoData> {
-  const sheetId = import.meta.env.VITE_SHEET_ID as string | undefined;
+  const sheetId = import.meta.env.VITE_TORNEO_SHEET_ID as string | undefined;
 
   if (!sheetId) {
-    console.info("[torneo] VITE_SHEET_ID non configurato — uso dati statici di esempio.");
-    return FALLBACK_DATA;
+    console.info(
+      "[torneo] VITE_TORNEO_SHEET_ID non configurato — live pronto per la prossima edizione.",
+    );
+    return EMPTY_TORNEO_DATA;
   }
 
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
@@ -243,23 +269,24 @@ export async function getTorneoData(): Promise<TorneoData> {
     };
 
     const cols = data.table.cols.map((c) => (c.label ?? "").trim());
-    const idx = (label: string) => cols.findIndex((c) => c.toLowerCase() === label.toLowerCase());
+    const idx = (label: string) =>
+      cols.findIndex((c) => c.toLowerCase() === label.toLowerCase());
 
     const ix = {
-      id:         idx("ID"),
-      categoria:  idx("Categoria"),
-      girone:     idx("Girone"),
-      data:       idx("Data"),
-      ora:        idx("Ora"),
-      casa:       idx("Squadra Casa"),
-      ospite:     idx("Squadra Ospite"),
-      golCasa:    idx("Gol Casa"),
-      golOspite:  idx("Gol Ospite"),
-      stato:      idx("Stato"),
-      campo:      idx("Campo"),
-      marcatori:  idx("Marcatori"),
-      mvp:        idx("MVP"),
-      note:       idx("Note"),
+      id: idx("ID"),
+      categoria: idx("Categoria"),
+      girone: idx("Girone"),
+      data: idx("Data"),
+      ora: idx("Ora"),
+      casa: idx("Squadra Casa"),
+      ospite: idx("Squadra Ospite"),
+      golCasa: idx("Gol Casa"),
+      golOspite: idx("Gol Ospite"),
+      stato: idx("Stato"),
+      campo: idx("Campo"),
+      marcatori: idx("Marcatori"),
+      mvp: idx("MVP"),
+      note: idx("Note"),
     };
 
     type Row = { c: ({ v: unknown; f?: string } | null)[] };
@@ -268,7 +295,7 @@ export async function getTorneoData(): Promise<TorneoData> {
       if (i < 0) return null;
       const c = row.c[i];
       if (!c || c.v === null || c.v === undefined || c.v === "") return null;
-      return c.f ?? String(c.v);
+      return (c.f ?? String(c.v)).trim();
     };
 
     const cellNum = (row: Row, i: number): number | null => {
@@ -280,39 +307,42 @@ export async function getTorneoData(): Promise<TorneoData> {
 
     const matches: Match[] = (data.table.rows as Row[])
       .map((r, i) => {
-        const casa   = cellVal(r, ix.casa)   ?? "";
+        const casa = cellVal(r, ix.casa) ?? "";
         const ospite = cellVal(r, ix.ospite) ?? "";
-        if (!casa && !ospite) return null;
+        if ((!casa && !ospite) || isByeTeam(casa) || isByeTeam(ospite))
+          return null;
         return {
-          id:         cellVal(r, ix.id)        ?? String(i + 1),
-          categoria:  cellVal(r, ix.categoria) ?? "",
-          girone:     cellVal(r, ix.girone)    ?? "",
-          data:       cellVal(r, ix.data)      ?? "",
-          ora:        cellVal(r, ix.ora)       ?? "",
+          id: cellVal(r, ix.id) ?? `row-${i + 1}`,
+          categoria: cellVal(r, ix.categoria) ?? "",
+          girone: cellVal(r, ix.girone) ?? "",
+          data: cellVal(r, ix.data) ?? "",
+          ora: cellVal(r, ix.ora) ?? "",
           casa,
           ospite,
-          golCasa:    cellNum(r, ix.golCasa),
-          golOspite:  cellNum(r, ix.golOspite),
-          stato:      normalizeStato(cellVal(r, ix.stato)),
-          campo:      cellVal(r, ix.campo)     ?? "",
-          marcatori:  parseMarcatori(cellVal(r, ix.marcatori), casa, ospite),
-          mvp:        cellVal(r, ix.mvp),
-          note:       cellVal(r, ix.note),
+          golCasa: cellNum(r, ix.golCasa),
+          golOspite: cellNum(r, ix.golOspite),
+          stato: normalizeStato(cellVal(r, ix.stato)),
+          campo: cellVal(r, ix.campo) ?? "",
+          marcatori: parseMarcatori(cellVal(r, ix.marcatori), casa, ospite),
+          mvp: cellVal(r, ix.mvp),
+          note: cellVal(r, ix.note),
         } satisfies Match;
       })
       .filter((m): m is Match => m !== null);
 
-    const categorie = [...new Set(matches.map((m) => m.categoria).filter(Boolean))];
+    const categorie = [
+      ...new Set(matches.map((m) => m.categoria).filter(Boolean)),
+    ];
 
     return {
       fetchedAt: new Date().toISOString(),
       matches,
       categorie,
       standings: computeStandings(matches),
-      scorers:   computeScorers(matches),
+      scorers: computeScorers(matches),
     };
   } catch (err) {
     console.error("[torneo] Errore fetch:", err);
-    return FALLBACK_DATA;
+    return EMPTY_TORNEO_DATA;
   }
 }

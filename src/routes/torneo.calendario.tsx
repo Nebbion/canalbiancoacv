@@ -1,6 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { useTorneoData, parseItalianDate } from "@/lib/use-torneo";
+import {
+  hasLiveTorneoSource,
+  useTorneoData,
+  parseItalianDate,
+} from "@/lib/use-torneo";
 import { MatchCard } from "@/components/torneo/MatchCard";
 
 export const Route = createFileRoute("/torneo/calendario")({
@@ -10,13 +14,22 @@ export const Route = createFileRoute("/torneo/calendario")({
 function Calendario() {
   const { data, isLoading } = useTorneoData();
   const [filtro, setFiltro] = useState<string>("Tutte");
+  const liveConfigured = hasLiveTorneoSource;
 
-  const categorie = useMemo(() => ["Tutte", ...(data?.categorie ?? [])], [data]);
+  const categorie = useMemo(
+    () => ["Tutte", ...(data?.categorie ?? [])],
+    [data],
+  );
 
   const partite = useMemo(() => {
     const all = data?.matches ?? [];
-    const f = filtro === "Tutte" ? all : all.filter((m) => m.categoria === filtro);
-    return [...f].sort((a, b) => parseItalianDate(a.data) - parseItalianDate(b.data) || a.ora.localeCompare(b.ora));
+    const f =
+      filtro === "Tutte" ? all : all.filter((m) => m.categoria === filtro);
+    return [...f].sort(
+      (a, b) =>
+        parseItalianDate(a.data) - parseItalianDate(b.data) ||
+        a.ora.localeCompare(b.ora),
+    );
   }, [data, filtro]);
 
   // Raggruppa per data
@@ -51,7 +64,11 @@ function Calendario() {
       {isLoading && <div className="text-white/60">Caricamento…</div>}
 
       {gruppi.length === 0 && !isLoading && (
-        <div className="rounded-xl border border-dashed border-white/15 p-10 text-center text-white/60">Nessuna partita.</div>
+        <div className="rounded-xl border border-dashed border-white/15 p-10 text-center text-white/60">
+          {liveConfigured
+            ? "Nessuna partita."
+            : "Calendario live in preparazione per la prossima edizione."}
+        </div>
       )}
 
       <div className="space-y-10">
@@ -59,11 +76,15 @@ function Calendario() {
           <section key={data}>
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px flex-1 bg-white/10" />
-              <div className="font-display text-xl text-primary tracking-wider">{data}</div>
+              <div className="font-display text-xl text-primary tracking-wider">
+                {data}
+              </div>
               <div className="h-px flex-1 bg-white/10" />
             </div>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {items.map((m) => <MatchCard key={m.id} m={m} compact />)}
+              {items.map((m) => (
+                <MatchCard key={m.id} m={m} compact />
+              ))}
             </div>
           </section>
         ))}

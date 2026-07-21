@@ -1,12 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTorneoData, type TorneoData } from "@/lib/torneo.functions";
+import {
+  EMPTY_TORNEO_DATA,
+  getTorneoData,
+  type TorneoData,
+} from "@/lib/torneo.functions";
+
+export const hasLiveTorneoSource = Boolean(
+  import.meta.env.VITE_TORNEO_SHEET_ID,
+);
 
 export function useTorneoData() {
   return useQuery<TorneoData>({
     queryKey: ["torneo"],
     queryFn: () => getTorneoData(),
-    refetchInterval: 30_000,
-    refetchOnWindowFocus: true,
+    enabled: hasLiveTorneoSource,
+    initialData: EMPTY_TORNEO_DATA,
+    refetchInterval: hasLiveTorneoSource ? 30_000 : false,
+    refetchOnWindowFocus: hasLiveTorneoSource,
     staleTime: 15_000,
   });
 }
